@@ -1,13 +1,11 @@
-import { ChangeEvent, useState, KeyboardEvent } from 'react';
+import {ChangeEvent, useState, KeyboardEvent, ReactNode} from 'react';
 
-const names = [
-  "John", "Jane", "James", "Jack", "Jill", "Julia", "Jackson", "Jasmine", "Jacob", "Jared",
-  "Jeff", "Jenny", "Jesse", "Jodie", "Joel", "Joey", "Johnny", "Joyce", "Jude", "Judy",
-  "Julian", "Juliet", "June", "Justin", "Karl", "Kate", "Katie", "Keith", "Kelly", "Ken"
-];
+interface AutocompleteProps {
+  options: string[];
+  listItem?: (value: string) => ReactNode;
+}
 
-
-export function Autocomplete() {
+export function AutocompleteEnd({options, listItem}: AutocompleteProps) {
   const [search, setSearch] = useState<string>("");
   const [results, setResults] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<number>(0);
@@ -16,7 +14,7 @@ export function Autocomplete() {
     setSearch(event.target.value);
 
     if (event.target.value.length > 0) {
-      const searchResults = names.filter((name) =>
+      const searchResults = options.filter((name) =>
           name.toLowerCase().includes(event.target.value.toLowerCase())
       );
       setResults(searchResults);
@@ -50,7 +48,7 @@ export function Autocomplete() {
             <ul className="mt-1 text-gray-700">
               {results.map((name, index) => (
                   <li key={index} className={`px-3 py-1 hover:bg-gray-200 cursor-pointer ${index === selectedOption ? 'bg-gray-200' : ''}`}>
-                    {name}
+                    {listItem ? listItem(name) : name}
                   </li>
               ))}
             </ul>
